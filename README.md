@@ -7,6 +7,8 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/kedube/ha-kohler-anthem/actions/workflows/test.yml"><img src="https://github.com/kedube/ha-kohler-anthem/actions/workflows/test.yml/badge.svg" alt="Test"></a>
+  <a href="https://github.com/kedube/ha-kohler-anthem/actions/workflows/validate.yml"><img src="https://github.com/kedube/ha-kohler-anthem/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
   <a href="#install"><img src="https://img.shields.io/badge/HACS-custom-41BDF5" alt="HACS: custom repository"></a>
   <img src="https://img.shields.io/badge/Home%20Assistant-2026.3%2B-41BDF5" alt="Home Assistant 2026.3 or later">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT licence">
