@@ -197,6 +197,6 @@ jobs:
               repo,
               tag_name: tag,
               target_commitish: target,
-              name: `Release: ${tag}`,
+              name: tag,
               body,
             })
