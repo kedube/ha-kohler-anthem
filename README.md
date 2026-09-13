@@ -1,9 +1,9 @@
 <p align="center">
-<h1 align="center">(Unofficial) Home Assistant Integration Kohler Anthem and Athem+ Shower Systems</h1>
+<h1 align="center">(Unofficial) Home Assistant Integration for Kohler Anthem and Athem+ Shower Systems</h1>
 </p>
 
 <p align="center">
-  Home Assistant integration for <b>Kohler Digital Anthem</b> and <b>Anthem+</b> shower systems.
+  A custom Home Assistant integration for <b>Kohler Digital Anthem</b> and <b>Anthem+</b> shower systems.
 </p>
 
 <p align="center">
@@ -14,8 +14,10 @@
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT licence">
 </p>
 
+> ⚠️ This is an **unofficial** integration. It is not affiliated with or endorsed by Kohler, and the underlying API may change at any time.
+
 <p align="center">
-  <sub>Unofficial. Not affiliated with or endorsed by Kohler.</sub>
+  <img src="docs/images/screenshot_1.png" alt="Kohler Anthem integration in Home Assistant">
 </p>
 
 ## Two products, one integration
@@ -33,6 +35,10 @@ Controlled by activating named favorites — whole scenes, not individual outlet
 Each appears as its own device in Home Assistant, with its own entities, and an account with
 both gets both. See [the full guide](docs/user_guide.md#using-both-together) for how they
 interact when combined.
+
+<p align="center">
+  <img src="docs/images/screenshot_2.png" alt="Kohler Anthem Device in Home Assistant">
+</p>
 
 ### Highlights
 
