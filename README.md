@@ -1,5 +1,5 @@
 <p align="center">
-<h1 align="center">(Unofficial) Kohler Anthem Integration for Home Assistant</h1>
+<h1 align="center">(Unofficial) Home Assistant Integration Kohler Anthem and Athem+ Shower Systems</h1>
 </p>
 
 <p align="center">
