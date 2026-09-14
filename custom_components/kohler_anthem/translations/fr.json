@@ -1,0 +1,48 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kohler Anthem",
+        "description": "Connectez-vous avec votre compte Kohler Konnect. La connexion se fait entièrement dans Home Assistant : il n'y a aucune étape dans le navigateur et rien à recopier.",
+        "data": {
+          "username": "E-mail",
+          "password": "Mot de passe"
+        }
+      },
+      "valve": {
+        "title": "Sélectionnez votre vanne",
+        "description": "Trouvé : {summary}\n\nLa configuration des sorties de votre vanne n'a pas pu être lue automatiquement. Choisissez donc le modèle de votre vanne numérique Anthem. Cela détermine le nombre de sorties existantes et la zone à laquelle chacune appartient. Ceci est requis même avec un contrôleur Anthem Plus seul, car le contrôleur indique les sorties par zone selon la même disposition.",
+        "data": {
+          "valve_model": "Modèle de vanne"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconnectez-vous",
+        "description": "La session enregistrée pour {username} a expiré. Saisissez de nouveau le mot de passe pour vous reconnecter.",
+        "data": {
+          "password": "Mot de passe"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Kohler a rejeté cet e-mail ou ce mot de passe.",
+      "cannot_connect": "Impossible de joindre Kohler. Vérifiez votre connexion internet et réessayez.",
+      "signin_blocked": "Kohler exige une étape supplémentaire pour se connecter (par exemple l'authentification à deux facteurs), que cette intégration ne peut pas effectuer.",
+      "no_devices": "Ce compte n'a aucun appareil Anthem ou Anthem Plus. Notez qu'un écran tactile Anthem Plus (K-28214-ASC) n'ajoute que le contrôleur ; pour ajouter la vanne elle-même, il faut un écran tactile Anthem de première génération (K-28214)."
+    },
+    "abort": {
+      "already_configured": "Ce compte Kohler est déjà configuré.",
+      "reauth_successful": "Reconnexion réussie."
+    }
+  },
+  "issues": {
+    "endless_shower_not_set_up": {
+      "title": "Douche infinie attend votre vanne",
+      "description": "Douche infinie est activée, mais Home Assistant n'a pas encore pu lire la limite de durée de la douche depuis votre vanne, et ne peut donc pas relancer votre douche.\n\n**Aucune action n'est nécessaire.** La limite est normalement lue pendant la configuration, et Douche infinie s'arme dès qu'elle arrive. Ce message disparaît de lui-même.\n\nS'il persiste après quelques minutes, la vanne est injoignable : vérifiez qu'elle est bien en ligne dans l'application Kohler Konnect, puis rechargez l'intégration."
+    },
+    "outlet_write_unverified": {
+      "title": "Un réglage de la douche n'a peut-être pas été appliqué",
+      "description": "Home Assistant a demandé à votre vanne de modifier **{setting}**, et la vanne a accepté la demande — mais la relecture de la valeur ensuite n'a pas montré le changement.\n\n{detail}\n\n**Ce que cela signifie.** L'API de Kohler répond « accepté pour livraison », jamais « appliqué », c'est pourquoi cette vérification existe pour détecter la différence. Le réglage a peut-être encore l'ancienne valeur.\n\n**Que faire.** Ouvrez l'entité et redéfinissez-la. Si cela échoue une seconde fois, vérifiez que la vanne est en ligne dans l'application Kohler Konnect — une vanne déconnectée du cloud accepte des commandes qui ne l'atteignent jamais.\n\nCe message disparaît lorsqu'un changement est vérifié."
+    }
+  }
+}

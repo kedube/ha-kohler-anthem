@@ -1,0 +1,48 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kohler Anthem",
+        "description": "Inicia sesión con tu cuenta de Kohler Konnect. El inicio de sesión ocurre completamente dentro de Home Assistant: no hay ningún paso en el navegador ni nada que copiar de vuelta.",
+        "data": {
+          "username": "Correo electrónico",
+          "password": "Contraseña"
+        }
+      },
+      "valve": {
+        "title": "Selecciona tu válvula",
+        "description": "Encontrado: {summary}\n\nNo se pudo leer automáticamente la distribución de salidas de tu válvula, así que elige el modelo de tu válvula digital Anthem. Esto determina cuántas salidas existen y a qué zona pertenece cada una. Es obligatorio incluso si solo tienes un controlador Anthem Plus, porque el controlador informa las salidas por zona usando la misma distribución.",
+        "data": {
+          "valve_model": "Modelo de válvula"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Inicia sesión de nuevo",
+        "description": "La sesión guardada para {username} ha caducado. Introduce la contraseña de nuevo para volver a conectarte.",
+        "data": {
+          "password": "Contraseña"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Kohler rechazó ese correo electrónico o contraseña.",
+      "cannot_connect": "No se pudo conectar con Kohler. Comprueba tu conexión a internet e inténtalo de nuevo.",
+      "signin_blocked": "Kohler necesita un paso adicional para iniciar sesión (por ejemplo, autenticación de dos factores), que esta integración no puede completar.",
+      "no_devices": "Esa cuenta no tiene dispositivos Anthem ni Anthem Plus. Ten en cuenta que una pantalla táctil Anthem Plus (K-28214-ASC) solo añade el controlador; para añadir la válvula en sí se necesita una pantalla táctil Anthem de primera generación (K-28214)."
+    },
+    "abort": {
+      "already_configured": "Esta cuenta de Kohler ya está configurada.",
+      "reauth_successful": "Reconexión realizada correctamente."
+    }
+  },
+  "issues": {
+    "endless_shower_not_set_up": {
+      "title": "Ducha Infinita está esperando a tu válvula",
+      "description": "Ducha Infinita está activada, pero Home Assistant aún no ha podido leer el límite de tiempo de la ducha desde tu válvula, por lo que no puede reiniciar tu ducha.\n\n**No es necesario hacer nada.** El límite normalmente se lee durante la configuración, y Ducha Infinita se activa en cuanto llega. Este mensaje desaparece por sí solo.\n\nSi sigue apareciendo después de unos minutos, la válvula no está disponible: comprueba que esté en línea en la aplicación Kohler Konnect y luego recarga la integración."
+    },
+    "outlet_write_unverified": {
+      "title": "Puede que un ajuste de la ducha no se haya aplicado",
+      "description": "Home Assistant pidió a tu válvula que cambiara **{setting}**, y la válvula aceptó la solicitud, pero al leer el valor de nuevo después no se mostró el cambio.\n\n{detail}\n\n**Qué significa esto.** La API de Kohler responde \"aceptado para su entrega\", nunca \"aplicado\", por lo que esta comprobación existe para detectar la diferencia. El ajuste podría seguir teniendo el valor anterior.\n\n**Qué hacer.** Abre la entidad y vuelve a establecerlo. Si falla una segunda vez, comprueba que la válvula esté en línea en la aplicación Kohler Konnect; una válvula que se ha desconectado de la nube acepta comandos que nunca le llegan.\n\nEste mensaje desaparece cuando un cambio se verifica."
+    }
+  }
+}

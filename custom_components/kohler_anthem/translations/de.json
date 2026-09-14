@@ -1,0 +1,48 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kohler Anthem",
+        "description": "Melde dich mit deinem Kohler-Konnect-Konto an. Die Anmeldung erfolgt vollständig innerhalb von Home Assistant – es gibt keinen Browser-Schritt und nichts zum Zurückkopieren.",
+        "data": {
+          "username": "E-Mail",
+          "password": "Passwort"
+        }
+      },
+      "valve": {
+        "title": "Wähle deine Armatur",
+        "description": "Gefunden: {summary}\n\nDie Auslasskonfiguration deiner Armatur konnte nicht automatisch gelesen werden. Wähle daher dein digitales Anthem-Armaturmodell aus. Dies bestimmt, wie viele Auslässe vorhanden sind und zu welcher Zone jeder gehört. Dies ist auch dann erforderlich, wenn nur ein Anthem-Plus-Controller vorhanden ist, da der Controller die Auslässe pro Zone anhand desselben Layouts meldet.",
+        "data": {
+          "valve_model": "Armaturmodell"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Erneut anmelden",
+        "description": "Die gespeicherte Sitzung für {username} ist abgelaufen. Gib das Passwort erneut ein, um die Verbindung wiederherzustellen.",
+        "data": {
+          "password": "Passwort"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Kohler hat diese E-Mail-Adresse oder dieses Passwort abgelehnt.",
+      "cannot_connect": "Kohler konnte nicht erreicht werden. Überprüfe deine Internetverbindung und versuche es erneut.",
+      "signin_blocked": "Kohler benötigt einen zusätzlichen Schritt zur Anmeldung (zum Beispiel Zwei-Faktor-Authentifizierung), den diese Integration nicht durchführen kann.",
+      "no_devices": "Dieses Konto hat keine Anthem- oder Anthem-Plus-Geräte. Beachte, dass ein Anthem-Plus-Touchscreen (K-28214-ASC) nur den Controller hinzufügt – um die Armatur selbst hinzuzufügen, ist ein Anthem-Touchscreen der ersten Generation (K-28214) erforderlich."
+    },
+    "abort": {
+      "already_configured": "Dieses Kohler-Konto ist bereits eingerichtet.",
+      "reauth_successful": "Erfolgreich wieder verbunden."
+    }
+  },
+  "issues": {
+    "endless_shower_not_set_up": {
+      "title": "Endlosdusche wartet auf deine Armatur",
+      "description": "Endlosdusche ist aktiviert, aber Home Assistant konnte das Zeitlimit der Dusche noch nicht von deiner Armatur auslesen und kann die Dusche daher nicht neu starten.\n\n**Es ist keine Aktion erforderlich.** Das Limit wird normalerweise während der Einrichtung gelesen, und Endlosdusche aktiviert sich selbst, sobald es eintrifft. Diese Meldung verschwindet von selbst.\n\nWenn sie nach ein paar Minuten immer noch angezeigt wird, ist die Armatur nicht erreichbar – überprüfe, ob sie in der Kohler-Konnect-App online ist, und lade die Integration dann neu."
+    },
+    "outlet_write_unverified": {
+      "title": "Eine Duscheinstellung wurde möglicherweise nicht angewendet",
+      "description": "Home Assistant hat deine Armatur gebeten, **{setting}** zu ändern, und die Armatur hat die Anfrage angenommen – aber beim anschließenden erneuten Auslesen des Werts wurde die Änderung nicht angezeigt.\n\n{detail}\n\n**Was das bedeutet.** Die API von Kohler antwortet mit „zur Zustellung angenommen“, niemals mit „angewendet“, daher dient diese Prüfung dazu, den Unterschied zu erkennen. Die Einstellung hat möglicherweise noch den alten Wert.\n\n**Was zu tun ist.** Öffne die Entität und stelle sie erneut ein. Wenn es ein zweites Mal fehlschlägt, überprüfe, ob die Armatur in der Kohler-Konnect-App online ist – eine Armatur, die die Verbindung zur Cloud verloren hat, nimmt Befehle an, die sie nie erreichen.\n\nDiese Meldung verschwindet, sobald eine Änderung bestätigt wird."
+    }
+  }
+}

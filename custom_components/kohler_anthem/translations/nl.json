@@ -1,0 +1,48 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Kohler Anthem",
+        "description": "Log in met je Kohler Konnect-account. Inloggen gebeurt volledig binnen Home Assistant – er is geen browserstap en niets om terug te kopiëren.",
+        "data": {
+          "username": "E-mailadres",
+          "password": "Wachtwoord"
+        }
+      },
+      "valve": {
+        "title": "Kies je klep",
+        "description": "Gevonden: {summary}\n\nDe uitgangsindeling van je klep kon niet automatisch worden uitgelezen, kies daarom het model van je digitale Anthem-klep. Dit bepaalt hoeveel uitgangen er zijn en tot welke zone elke uitgang behoort. Dit is ook vereist wanneer er alleen een Anthem Plus-controller aanwezig is, omdat de controller de uitgangen per zone meldt volgens dezelfde indeling.",
+        "data": {
+          "valve_model": "Klepmodel"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log opnieuw in",
+        "description": "De opgeslagen sessie voor {username} is verlopen. Voer het wachtwoord opnieuw in om opnieuw verbinding te maken.",
+        "data": {
+          "password": "Wachtwoord"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Kohler heeft dat e-mailadres of wachtwoord afgewezen.",
+      "cannot_connect": "Kon geen verbinding maken met Kohler. Controleer je internetverbinding en probeer het opnieuw.",
+      "signin_blocked": "Kohler vereist een extra stap om in te loggen (bijvoorbeeld tweefactorauthenticatie), die deze integratie niet kan voltooien.",
+      "no_devices": "Dat account heeft geen Anthem- of Anthem Plus-apparaten. Let op: een Anthem Plus-touchscreen (K-28214-ASC) voegt alleen de controller toe — voor het toevoegen van de klep zelf is een eerste-generatie Anthem-touchscreen (K-28214) vereist."
+    },
+    "abort": {
+      "already_configured": "Dit Kohler-account is al ingesteld.",
+      "reauth_successful": "Opnieuw verbonden."
+    }
+  },
+  "issues": {
+    "endless_shower_not_set_up": {
+      "title": "Oneindige douche wacht op je klep",
+      "description": "Oneindige douche staat aan, maar Home Assistant heeft de tijdslimiet van de douche nog niet van je klep kunnen uitlezen, waardoor de douche niet opnieuw kan worden gestart.\n\n**Er is geen actie nodig.** De limiet wordt normaal gesproken tijdens het instellen uitgelezen, en Oneindige douche schakelt zichzelf in zodra deze binnenkomt. Dit bericht verdwijnt vanzelf.\n\nAls het na een paar minuten nog steeds verschijnt, is de klep niet bereikbaar — controleer of deze online is in de Kohler Konnect-app en herlaad daarna de integratie."
+    },
+    "outlet_write_unverified": {
+      "title": "Een doucheinstelling is mogelijk niet toegepast",
+      "description": "Home Assistant heeft je klep gevraagd om **{setting}** te wijzigen, en de klep heeft het verzoek geaccepteerd — maar bij het opnieuw uitlezen van de waarde bleek de wijziging niet te zijn doorgevoerd.\n\n{detail}\n\n**Wat dit betekent.** De API van Kohler antwoordt met \"geaccepteerd voor levering\", nooit met \"toegepast\", daarom bestaat deze controle om het verschil op te sporen. De instelling heeft mogelijk nog de oude waarde.\n\n**Wat te doen.** Open de entiteit en stel deze opnieuw in. Als het een tweede keer mislukt, controleer dan of de klep online is in de Kohler Konnect-app — een klep die de verbinding met de cloud heeft verloren, accepteert opdrachten die nooit aankomen.\n\nDit bericht verdwijnt zodra een wijziging is geverifieerd."
+    }
+  }
+}
