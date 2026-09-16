@@ -15,7 +15,7 @@ hex sensor, where a zero reads as data rather than as a broken entity.
 
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import Any, ClassVar
 
 from homeassistant.components.sensor import (
@@ -62,6 +62,16 @@ VALVE_STATES = [STATE_RUNNING, STATE_PAUSED, STATE_WARMING, STATE_IDLE]
 # Same strings for the three it does have, so the two sensors can be compared directly and
 # templated against interchangeably.
 CONTROLLER_STATES = [STATE_RUNNING, STATE_WARMING, STATE_IDLE]
+
+
+def _usage_bucket_date(interval: object) -> date | None:
+    """Return the calendar date from a `gcs-usage` interval key."""
+    if not isinstance(interval, str):
+        return None
+    try:
+        return date.fromisoformat(interval[:10])
+    except ValueError:
+        return None
 
 
 async def async_setup_entry(
@@ -557,7 +567,7 @@ class _DailyWaterSensor(KohlerValveEntity, SensorEntity):
 
     def __init__(self, coordinator: KohlerAnthemCoordinator, valve: Valve) -> None:
         super().__init__(coordinator, valve)
-        self._cache_key: int | None = None
+        self._cache_key: tuple[int, date, date] | None = None
         self._cached: tuple[float | None, dict[str, Any]] = (None, {})
 
     @property
@@ -575,29 +585,48 @@ class _DailyWaterSensor(KohlerValveEntity, SensorEntity):
         entity, and this series changes only when a shower ends.
         """
         usage = self._valve.usage_daily
-        key = id(usage)
+        local_today = dt_util.now().date()
+        utc_today = datetime.now(UTC).date()
+        key = (id(usage), local_today, utc_today)
         if key == self._cache_key:
             return self._cached
 
         # **Local dates, not UTC.** "Today" is the owner's today; the series keys its
         # buckets by calendar date, and comparing them against a UTC date would roll the
         # day over at the wrong hour for most of the world.
-        today = dt_util.now().date()
-        wanted = {
-            (today - timedelta(days=offset)).isoformat() for offset in range(self._days)
-        }
+        wanted = [local_today - timedelta(days=offset) for offset in range(self._days)]
+
         litres = 0.0
         days: dict[str, float] = {}
+        volumes: dict[date, float] = {}
         for entry in usage_series(usage):
             interval = entry.get("intervalKey")
-            if not isinstance(interval, str) or interval not in wanted:
+            bucket = _usage_bucket_date(interval)
+            if bucket is None:
                 continue
             volume = entry.get("volume")
             if not isinstance(volume, (int, float)):
                 continue
-            litres += float(volume)
-            days[interval] = round(
-                float(volume) if self._metric else usage_volume_gallons(float(volume)),
+            volumes[bucket] = volumes.get(bucket, 0.0) + float(volume)
+
+        for day in wanted:
+            bucket = day
+            # Some accounts appear to expose the daily chart on UTC bucket labels. In US
+            # evenings that can put local "today" under tomorrow's ISO date, which used to
+            # render as zero/unknown even after water was used.
+            if (
+                day == local_today
+                and utc_today > local_today
+                and volumes.get(day, 0.0) == 0
+                and volumes.get(utc_today, 0.0) > 0
+            ):
+                bucket = utc_today
+            volume = volumes.get(bucket)
+            if volume is None:
+                continue
+            litres += volume
+            days[bucket.isoformat()] = round(
+                volume if self._metric else usage_volume_gallons(volume),
                 1,
             )
 
@@ -607,6 +636,10 @@ class _DailyWaterSensor(KohlerValveEntity, SensorEntity):
             value = litres if self._metric else usage_volume_gallons(litres)
             total = round(value, 1)
             attributes = {"days_counted": len(days)}
+            if self._days == 1 and days:
+                bucket_date = next(iter(days))
+                if bucket_date != local_today.isoformat():
+                    attributes["bucket_date"] = bucket_date
             if self._days > 1:
                 # The per-day breakdown is the point of a rolling window: it says which day
                 # the water went, which a single figure cannot.

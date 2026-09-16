@@ -2521,6 +2521,55 @@ def test_water_used_today_is_the_last_bucket(monkeypatch):
     assert today.extra_state_attributes["days_counted"] == 1
 
 
+def test_water_used_today_accepts_utc_next_day_bucket(monkeypatch):
+    """US evenings can label local today's usage with tomorrow's UTC date."""
+    from datetime import UTC, date
+
+    from custom_components.kohler_anthem import sensor as module
+    from custom_components.kohler_anthem.anthem.models import (
+        model_for_topology,
+    )
+
+    class _PinnedLocalNow:
+        @staticmethod
+        def now():
+            class _Today:
+                @staticmethod
+                def date():
+                    return date(2026, 9, 15)
+
+            return _Today()
+
+    class _PinnedUtcDateTime:
+        @staticmethod
+        def now(tz=None):
+            assert tz is UTC
+
+            class _Today:
+                @staticmethod
+                def date():
+                    return date(2026, 9, 16)
+
+            return _Today()
+
+    monkeypatch.setattr(module, "dt_util", _PinnedLocalNow)
+    monkeypatch.setattr(module, "datetime", _PinnedUtcDateTime)
+    model = model_for_topology(3, 0)
+    valve = make_valve(model, [31, 11, 1])
+    valve.usage_daily = {
+        "gcsUsageDataDetailsList": [{"intervalKey": "2026-09-16", "volume": 41}]
+    }
+    coordinator = make_coordinator([valve])
+
+    today = module.ValveDailyWaterSensor(coordinator, valve)
+
+    assert today.native_value == 10.8
+    assert today.extra_state_attributes == {
+        "days_counted": 1,
+        "bucket_date": "2026-09-16",
+    }
+
+
 def test_water_used_this_week_sums_seven_days(monkeypatch):
     """A rolling seven days, today included — `Interval=WEEK` is refused by this endpoint."""
     _, week = _water_sensors(monkeypatch)
