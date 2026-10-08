@@ -9,6 +9,32 @@ Every push to `main` that passes CI is released. To choose the version, set it i
 `manifest.json` and it is released as written; leave it alone and the minor version is
 bumped (0.24 → 0.25).
 
+## Unreleased
+
+Notes for 0.27 as well, which shipped without them.
+
+**Changed** (in 0.27, from #4)
+
+- **`Water Used This Year` is now the calendar year so far** — January 1 to today, matching
+  the Konnect app's Year tab. Until 0.26 it was the last twelve complete months.
+- **`Water Used This Month` and `This Year` update after every shower**, not only when Home
+  Assistant restarts.
+- **`Water Used Today` and `This Week`** check once more, three minutes later, when Kohler
+  hasn't recorded a shower 90 seconds after it ends. A shower that ends while the
+  connection is down is still counted. `Today` turns over at local midnight and reads 0
+  until the day's first shower.
+
+**Fixed**
+
+- **`Water Used This Year` no longer drops when a month ends.** The month just ended fell
+  back to the partial figure read at startup until the next shower. Each month now uses
+  the higher of Kohler's monthly figure and its daily total.
+- **`This Month` and `This Year` read 0, not unknown,** on the 1st and on January 1 until
+  the first shower.
+- **Long-term statistics no longer record the daily, monthly and yearly resets as negative
+  water use.** `Today`, `This Month` and `This Year` now tell Home Assistant when each
+  period starts.
+
 ## 0.26 — 2026-10-08
 
 **Fixed**

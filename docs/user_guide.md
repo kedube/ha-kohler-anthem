@@ -202,8 +202,12 @@ zone 2:
 |---|---|---|
 | `Water Used Today` | sensor | Water used since local midnight, from **Kohler's own per-day usage series** — the same data behind the Konnect app's chart. Refreshed after a shower ends (never on a polling clock) and resets to `0.0` at local midnight |
 | `Water Used This Week` | sensor | The last seven days including today, as a rolling window — **not a calendar week**. Summed from seven daily buckets; `per_day` carries the breakdown |
-| `Water Used This Month` | sensor | This calendar month's usage, from **Kohler's own history** and kept current after each shower via the daily usage series. Carries every month returned as a `history` attribute |
-| `Water Used This Year` | sensor | Calendar year to date (`Jan 1` – today), matching the Konnect app's **Year** tab. Prior months come from Kohler's monthly history and the current month rolls up from the daily series, so every shower updates the yearly total with no extra API calls |
+| `Water Used This Month` | sensor | This calendar month's usage, from **Kohler's own history** and kept current after each shower via the daily usage series. Reads `0.0` on the 1st until the month's first shower. Carries every month returned as a `history` attribute |
+| `Water Used This Year` | sensor | Calendar year to date (`Jan 1` – today), matching the Konnect app's **Year** tab. Each month uses Kohler's monthly history or the daily series, whichever is higher, so every shower updates the yearly total with no extra API calls and a month that has just ended keeps its full total. Reads `0.0` on January 1 until the year's first shower |
+
+`Water Used Today`, `This Month` and `This Year` each start a new period in Home Assistant's
+long-term statistics at local midnight, on the 1st and on January 1. The drop back to zero is
+recorded as a new period, not as negative water use.
 | `Shower on` | switch | Turns the shower on or off. From cold it opens **the valve's own default outlets**; if outlets are already open it preserves them |
 | `Rainhead`, `Showerhead`, `Handshower`, `Tub Filler`, `Body Sprays`, `Foot Sprays`… | switch | One per outlet, named after the fixture the valve reports. See **Outlet names** below |
 | `Temperature` | number | Setpoint for that zone, in your account's unit — the Konnect app's slider: **Cold**, then 59 °F up to the valve's current `Max Temperature`. The bottom step (58 °F / 14 °C) is **Cold**: the valve stops mixing in hot water, as the app's `COLD` stop does, and the `cold` attribute reads true. `Temperature 1` / `Temperature 2` on a two-zone valve |

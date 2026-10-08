@@ -194,6 +194,9 @@ def make_valve(
         zone_flowing_for=lambda zone: None,
         about_parts={},
         firmware_info={},
+        # A real `Valve` starts both usage series as {} and keeps them dicts.
+        usage={},
+        usage_daily={},
     )
 
 

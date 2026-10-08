@@ -2176,12 +2176,18 @@ def _seed_valve(client):
     valve.gcs_device = SimpleNamespace(device_id="dev-1")
     valve.configuration = None
     valve.usage = {}
+    valve.usage_daily = {}
+    valve._usage_seeded_month = None
     valve._seeded_presets = None
     valve._topology_checked = True
     valve.cloud_watch = None
+    # The seed reads the running edge after applying REST state, as a real valve does.
+    valve._was_running = False
+    valve._daily_usage_task = None
     valve.gcs_state = SimpleNamespace(
         outlet_limits={},
         warmup_mode=None,
+        is_running=False,
         apply_rest_state=lambda payload: None,
         apply_preset_list=lambda payload: False,
     )
@@ -2709,6 +2715,7 @@ async def test_daily_usage_refreshes_when_a_shower_ends():
             self._was_running = False
             self._daily_usage_task = None
             self._background_tasks = set()
+            self.usage_daily = {}
             self.hass = SimpleNamespace(async_create_task=asyncio.ensure_future)
             self.coordinator = SimpleNamespace(
                 async_refresh_entities=lambda: calls.append("rendered")

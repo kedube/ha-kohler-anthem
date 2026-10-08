@@ -918,9 +918,8 @@ class Valve:
         `USAGE_RETRY_DELAY_SECONDS`. When the first read already reflects the new water —
         or when no baseline was seeded yet — no extra request is made.
         """
-        usage_daily = getattr(self, "usage_daily", None)
-        had_baseline = bool(isinstance(usage_daily, dict) and usage_series(usage_daily))
-        baseline = _daily_usage_volumes(usage_daily)
+        had_baseline = bool(usage_series(self.usage_daily))
+        baseline = _daily_usage_volumes(self.usage_daily)
 
         await asyncio.sleep(USAGE_REFRESH_DELAY_SECONDS)
         if self.gcs_state.is_running:
@@ -937,7 +936,7 @@ class Valve:
 
         if not had_baseline:
             return
-        fresh = _daily_usage_volumes(getattr(self, "usage_daily", None))
+        fresh = _daily_usage_volumes(self.usage_daily)
         if any(vol > baseline.get(day, 0.0) for day, vol in fresh.items()):
             return
 
@@ -1255,7 +1254,7 @@ class Valve:
         # `async_get_usage` returns `{}` on a transient HTTP failure; only overwrite
         # `self.usage` when the read succeeds (or on cold start when nothing is held yet),
         # so a transient failure on month rollover never drops prior months from memory.
-        if fresh or not getattr(self, "usage", None):
+        if fresh or not self.usage:
             self.usage = fresh
         if fresh:
             self._usage_seeded_month = dt_util.now().strftime("%Y-%m")
@@ -1285,12 +1284,12 @@ class Valve:
         )
         # Keep the prior daily series if a post-shower read transiently returns `{}`, so
         # `Water Used Today` and `Water Used This Week` do not blank to `unknown`.
-        if fresh or not getattr(self, "usage_daily", None):
+        if fresh or not self.usage_daily:
             self.usage_daily = fresh
         # When a shower ends in a new local calendar month after initial seed, re-read the
         # monthly series once so the newly completed month is locked into `self.usage`
         # before the 35-day daily window rolls past its start.
-        seeded_month = getattr(self, "_usage_seeded_month", None)
+        seeded_month = self._usage_seeded_month
         if seeded_month is not None and dt_util.now().strftime("%Y-%m") != seeded_month:
             await self.async_refresh_monthly_usage()
 
@@ -1382,8 +1381,8 @@ class Valve:
                 )
             was_warmup = self.gcs_state.warmup_mode
             self.gcs_state.apply_rest_state(payload)
-            if hasattr(self, "_was_running") and hasattr(self.gcs_state, "is_running"):
-                self._note_running_for_usage()
+            # A shower that ended while the stream was down still gets its usage read.
+            self._note_running_for_usage()
             # Warm-up gets its own call rather than thirty lines here: a mode that moved
             # while the stream was down reaches nothing else, and the reasoning about why
             # belongs beside the rest of the warm-up machinery. See
