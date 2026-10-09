@@ -1,5 +1,10 @@
 <p align="center">
-<h1 align="center">(Unofficial) Home Assistant Integration for Kohler Anthem and Athem+ Shower Systems</h1>
+<h1 align="center">New integration repo: https://github.com/kedube/ha-kohler-konnect</h1>
+</p>
+
+<hr>
+<p align="center">
+<h1 align="center">[DEPRECATED] (Unofficial) Home Assistant Integration for Kohler Anthem and Athem+ Shower Systems [DEPRECATED]</h1>
 </p>
 
 <p align="center">
